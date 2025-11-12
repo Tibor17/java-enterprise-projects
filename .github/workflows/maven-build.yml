@@ -11,7 +11,7 @@ jobs:
         with:
           java-version: 17
           maven-version: 3.9.11
-      - name: Maven Build
+      - name: Maven SpringBoot Build
         env:
           APIKEY: ${{ secrets.ApiKey }}
         run: mvn -V -B -f weather-forecast-springboot/pom.xml package
