@@ -1,0 +1,17 @@
+name: 'Maven build process'
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Maven Action
+        uses: s4u/setup-maven-action@v1.19.0
+        with:
+          java-version: 17
+          maven-version: 3.9.11
+      - name: Maven Build
+        env:
+          APIKEY: ${{ secrets.ApiKey }}
+        run: mvn -V -B -f weather-forecast-springboot/pom.xml package

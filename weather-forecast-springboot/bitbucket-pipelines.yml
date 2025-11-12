@@ -1,0 +1,9 @@
+pipelines:
+  default:
+    - step:
+        name: Maven Build and Test
+        image: maven:3.9.11-amazoncorretto-17
+        caches:
+          - maven
+        script:
+          - mvn -B clean verify
