@@ -6,8 +6,11 @@ import org.tibor17.wwws.model.restclient.WeatherbitDayResourceDTO;
 import org.tibor17.wwws.model.restclient.WeatherbitRootResourceDTO;
 import org.tibor17.wwws.model.restservice.OptimalWeatherDTO;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Comparator.naturalOrder;
 import static org.tibor17.wwws.util.OptimalWeatherUtil.hasOptimalWeatherConditions;
@@ -30,16 +33,27 @@ public class OptimalWeatherCalculatorService {
 
     List<WeatherbitDayResourceDTO> findResourcesByDate(Collection<WeatherbitRootResourceDTO> examinedLocations,
                                                        LocalDate expectedDate) {
-
-        var resourcesMatchedByDate = new ArrayList<WeatherbitDayResourceDTO>();
-        examinedLocations.forEach(location ->
-                location.getForecast().stream()
-                .filter(res -> res.getDatetime().equals(expectedDate))
-                .findFirst()
-                .ifPresent(resourcesMatchedByDate::add));
-        return resourcesMatchedByDate;
+        return examinedLocations.stream().flatMap(location ->
+                        location.getForecast().stream()
+                                .filter(res -> res.getDatetime().equals(expectedDate))
+                                .findFirst()
+                                .stream()
+                ).toList();
     }
 
+    /**
+     * This algorithm is sorting given {@code forecasts}.
+     * Optimal forecast is determined by
+     * {@link org.tibor17.wwws.util.OptimalWeatherUtil#hasOptimalWeatherConditions(BigDecimal, BigDecimal)}.
+     * Only optimal forecast is processed.
+     * Each forecast {@link WeatherbitDayResourceDTO} is evaluated by the mathematical formula in
+     * {@link org.tibor17.wwws.util.OptimalWeatherUtil#computeWindsurfingRatingIndex(BigDecimal, BigDecimal)}
+     * and returns weather rating. The forecasts are sorted by the rating from small rating index to big index.
+     * Returns the forecast with the highest rating index.
+     *
+     * @param forecasts each {@link WeatherbitDayResourceDTO} is sortable
+     * @return one weather forecast with the best conditions (rating index); if any
+     */
     Optional<WeatherbitDayResourceDTO> findBestMatch(Collection<WeatherbitDayResourceDTO> forecasts) {
         var validForecastResources =
                 forecasts.stream().filter(dto ->

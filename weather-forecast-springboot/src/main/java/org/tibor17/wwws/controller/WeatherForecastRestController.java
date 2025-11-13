@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.tibor17.wwws.client.WeatherForecastRestClientService;
-import org.tibor17.wwws.model.restclient.WeatherbitRootResourceDTO;
 import org.tibor17.wwws.model.restservice.OptimalWeatherDTO;
 import org.tibor17.wwws.service.ConfigService;
 import org.tibor17.wwws.service.OptimalWeatherCalculatorService;
@@ -22,7 +21,6 @@ import org.tibor17.wwws.service.OptimalWeatherCalculatorService;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.noContent;
@@ -74,12 +72,12 @@ public class WeatherForecastRestController {
 
         var factory = restClientService.buildHttpServiceProxyFactory(new URI(remoteUrl));
 
-        var examinedLocations = new ArrayList<WeatherbitRootResourceDTO>();
-        locations.forEach(location -> {
+        var examinedLocations = locations.stream().map(location -> {
             var locationResource =
                     restClientService.readWeatherForecast(factory, location.latitude(), location.longitude(), authKey);
             log.info("Found weather forecast location by date {}: {}", date, locationResource);
-        });
+            return locationResource;
+        }).toList();
 
         var resource = optimalWeatherCalculatorService.findBestWeatherForecastLocation(examinedLocations, date);
 

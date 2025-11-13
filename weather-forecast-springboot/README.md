@@ -232,7 +232,7 @@ $ docker compose logs postgres
 
 Now PgAdmin is running (open the address *http://localhost:5050/browser/* in the browser), create a new database.
 In my case the name of database server is *postgresdb* and the connection IP address is the address
-behind the bridge *172.18.0.1*.
+behind the bridge *172.18.0.1*. The login is **admin**, and password id **password**.
 
 ![Pipeline](docs/6.png)
 
@@ -282,6 +282,18 @@ in the command line using cURL:
 $ curl -X GET http://localhost:8080/api/v0.1/windfinder/forecast/dates/2025-11-03
 ```
 
+where the response of our REST service would be as follows:
+
+```json lines
+{
+  "city_name": "Bridgetown",
+  "country_code": "BB",
+  "lat": 13.1073,
+  "lon": -59.6202,
+  "temp": 28.1,
+  "wind_spd": 5
+}
+```
 
 ### Development process - SDLC ###
 
