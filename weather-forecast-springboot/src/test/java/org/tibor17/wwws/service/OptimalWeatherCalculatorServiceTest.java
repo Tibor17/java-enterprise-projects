@@ -125,4 +125,16 @@ public class OptimalWeatherCalculatorServiceTest {
         assertThat(computeWindsurfingRatingIndex(new BigDecimal(11), new BigDecimal(20)))
                 .isEqualTo(new BigDecimal(53));
     }
+
+    @Test
+    void shouldMaskShortAuthKey() {
+        assertThat(maskAuthKey("0A2B4"))
+                .isEqualTo("*****");
+    }
+
+    @Test
+    void shouldMaskLongAuthKey() {
+        assertThat(maskAuthKey("0a23bc67c9"))
+                .isEqualTo("0a2****7c9");
+    }
 }

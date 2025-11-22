@@ -24,6 +24,7 @@ import java.time.LocalDate;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.noContent;
+import static org.tibor17.wwws.util.OptimalWeatherUtil.maskAuthKey;
 
 @RestController
 @RequestMapping("/api/v0.1/windfinder/forecast")
@@ -65,7 +66,8 @@ public class WeatherForecastRestController {
 
         var remoteUrl = configService.findConnectionUrl();
         var authKey = configService.findAuthKey();
-        log.info("Remote access URL {} for the REST client. Authorization key {}.", remoteUrl, authKey);
+        log.info("Remote access URL {} for the REST client. Authorization key {}.",
+                remoteUrl, maskAuthKey(authKey));
 
         var locations = configService.findAllLocations();
         log.info("Loaded {} locations from the database.", locations.size());
