@@ -1,8 +1,14 @@
 #!/bin/sh
 
+# OpenJdk: enable Generational Shenandoah GC
+#export GC_JVM_OPTS="-XX:+AlwaysPreTouch -XX:+UseShenandoahGC -XX:+UnlockExperimentalVMOptions -XX:ShenandoahGCMode=generational -XX:ShenandoahGCHeuristics=adaptive -XX:+UseStringDeduplication -XX:+UseCompressedOops"
+
+# IBM Temurin JDK: OpenJ9 GC and JVM
 export GC_JVM_OPTS="-Xgc:concurrentScavenge -XX:+IdleTuningGcOnIdle -XX:IdleTuningMinIdleWaitTime=15"
-# DisableAttachMechanism disables the troubleshooting tools like jcmd, jstack, jmap, and jinfo.
-export MISC_JVM_OPTS="-XX:+UseCompressedOops -XX:+UseStringDeduplication -XX+DisableAttachMechanism -XX:UnlockCommercialFeatures -XX:-FlightRecorder"
+
+# -XX:+UnlockCommercialFeatures -XX:-FlightRecorder -XX+DisableAttachMechanism disables the troubleshooting tools like Flight recorder, remote JMX, jcmd, jstack, jmap, and jinfo.
+export MISC_JVM_OPTS="-XX:+AlwaysPreTouch -XX:+UseCompressedOops -XX:+UseStringDeduplication -XX+DisableAttachMechanism -XX:+UnlockCommercialFeatures -XX:-FlightRecorder"
+
 export JAVA_OPTS="$GC_JVM_OPTS $MISC_JVM_OPTS"
 
 export JAVA_OPTS="$JAVA_OPTS -server"
