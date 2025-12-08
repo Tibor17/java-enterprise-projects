@@ -127,6 +127,12 @@ public class OptimalWeatherCalculatorServiceTest {
     }
 
     @Test
+    void shouldNotMaskNullAuthKey() {
+        assertThat(maskAuthKey(null))
+                .isNull();
+    }
+
+    @Test
     void shouldMaskShortAuthKey() {
         assertThat(maskAuthKey("0A2B4"))
                 .isEqualTo("*****");

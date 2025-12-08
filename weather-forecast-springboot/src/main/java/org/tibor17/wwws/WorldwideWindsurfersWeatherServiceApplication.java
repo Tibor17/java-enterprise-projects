@@ -3,21 +3,17 @@ package org.tibor17.wwws;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import static org.springframework.boot.SpringApplication.run;
 
-@SpringBootApplication
-@EnableAutoConfiguration
+@SpringBootApplication(scanBasePackages = "org.tibor17.wwws")
 @PropertySource("classpath:/application.properties")
-@ComponentScan(basePackages = "org.tibor17.wwws")
 @EntityScan(basePackages = "org.tibor17.wwws.domain")
 @EnableJpaRepositories(basePackages = "org.tibor17.wwws.repository")
 public class WorldwideWindsurfersWeatherServiceApplication {
@@ -28,7 +24,7 @@ public class WorldwideWindsurfersWeatherServiceApplication {
 
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
-        CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
+        var filter = new CommonsRequestLoggingFilter();
         filter.setIncludeClientInfo(true);
         filter.setIncludeQueryString(true);
         filter.setIncludeHeaders(true);

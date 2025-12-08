@@ -2,6 +2,7 @@ package org.tibor17.wwws.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tibor17.wwws.dto.GeoLocation;
@@ -9,7 +10,10 @@ import org.tibor17.wwws.repository.LocationRepository;
 import org.tibor17.wwws.repository.SettingsRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.stream.StreamSupport.stream;
 import static org.tibor17.wwws.util.OptimalWeatherUtil.maskAuthKey;
 
@@ -22,23 +26,46 @@ public class ConfigService {
     @Autowired
     private LocationRepository locationRepository;
 
-    public String findConnectionUrl() {
+    @Transactional(readOnly = true)
+    @Cacheable(key = " 'remote-connection-url' ", cacheNames = "string-value")
+    public Optional<String> findConnectionUrl() {
         var rows = settingsRepository.findAll().iterator();
-        return rows.hasNext() ? rows.next().getUrl() : "";
+
+        Optional<String> url = empty();
+        if (rows.hasNext()) {
+            var urlRecord = rows.next().getUrl();
+            url = of(urlRecord);
+            log.info("Connection URL: {} in settings.", urlRecord);
+        }
+
+        if (rows.hasNext()) {
+            log.warn("There are more than one row of Connection URL in settings!");
+        }
+
+        return url;
     }
 
     @Transactional(readOnly = true)
-    public String findAuthKey() {
+    @Cacheable(key = " 'auth-key' ", cacheNames = "string-value")
+    public Optional<String> findAuthKey() {
         var rows = settingsRepository.findAll().iterator();
-        var authKey = rows.hasNext() ? rows.next().getAuthKey() : "";
-        log.info("AuthKey: {} in settings.", maskAuthKey(authKey));
+
+        Optional<String> authKey = empty();
         if (rows.hasNext()) {
-            log.warn("There are more than one rows of AuthKey in settings!");
+            var authKeyRecord = rows.next().getAuthKey();
+            authKey = of(authKeyRecord);
+            log.info("AuthKey: {} in settings.", maskAuthKey(authKeyRecord));
         }
+
+        if (rows.hasNext()) {
+            log.warn("There are more than one row of AuthKey in settings!");
+        }
+
         return authKey;
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(key = " 'geos' ", cacheNames = "geo-locations")
     public Collection<GeoLocation> findAllLocations() {
         return stream(locationRepository.findAll().spliterator(), false)
                 .map(e -> new GeoLocation(e.getLatitude(), e.getLongitude()))

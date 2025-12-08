@@ -13,18 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.tibor17.wwws.client.WeatherForecastRestClientService;
 import org.tibor17.wwws.model.restservice.OptimalWeatherDTO;
 import org.tibor17.wwws.service.ConfigService;
 import org.tibor17.wwws.service.OptimalWeatherCalculatorService;
+import org.tibor17.wwws.util.OptimalWeatherUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.ResponseEntity.noContent;
-import static org.tibor17.wwws.util.OptimalWeatherUtil.maskAuthKey;
 
 @RestController
 @RequestMapping("/api/v0.1/windfinder/forecast")
@@ -66,17 +69,20 @@ public class WeatherForecastRestController {
 
         var remoteUrl = configService.findConnectionUrl();
         var authKey = configService.findAuthKey();
+
         log.info("Remote access URL {} for the REST client. Authorization key {}.",
-                remoteUrl, maskAuthKey(authKey));
+                remoteUrl.orElse("missing"),
+                authKey.map(OptimalWeatherUtil::maskAuthKey).orElse("missing"));
 
         var locations = configService.findAllLocations();
         log.info("Loaded {} locations from the database.", locations.size());
 
-        var factory = restClientService.buildHttpServiceProxyFactory(new URI(remoteUrl));
+        var factory = restClientService.buildHttpServiceProxyFactory(checkURL(remoteUrl));
 
         var examinedLocations = locations.stream().map(location -> {
-            var locationResource =
-                    restClientService.readWeatherForecast(factory, location.latitude(), location.longitude(), authKey);
+            var locationResource = restClientService.readWeatherForecast(factory,
+                    location.latitude(), location.longitude(), checkAuthKey(authKey));
+
             log.info("Found weather forecast location by date {}: {}", date, locationResource);
             return locationResource;
         }).toList();
@@ -87,5 +93,17 @@ public class WeatherForecastRestController {
 
         return resource.map(ResponseEntity::ok)
                 .orElseGet(() -> noContent().build());
+    }
+
+    private static URI checkURL(Optional<String> remoteUrl) throws URISyntaxException {
+        if (remoteUrl.isEmpty()) {
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Missing database record for remote URL access.");
+        }
+        return new URI(remoteUrl.get());
+    }
+
+    private static String checkAuthKey(Optional<String> authKey) {
+        return authKey.orElseThrow(() -> new ResponseStatusException(INTERNAL_SERVER_ERROR,
+                                                                       "Missing database record for ApiKey."));
     }
 }
