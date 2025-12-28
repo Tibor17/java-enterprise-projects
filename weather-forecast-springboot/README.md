@@ -267,8 +267,8 @@ Finally, the application will call the following list of URL addresses:
 1. *https://api.weatherbit.io/v2.0/forecast/daily?lat=54.69606&lon=18.67873&key=<32-bit ApiKey>*
 2. *https://api.weatherbit.io/v2.0/forecast/daily?lat=13.10732&lon=-59.62021&key=<32-bit ApiKey>*
 3. *https://api.weatherbit.io/v2.0/forecast/daily?lat=-3.71722&lon=-38.54306&key=<32-bit ApiKey>*
-4. *https://api.weatherbit.io/v2.0/forecast/daily?lat=34.66942&lon=32.70132&key=<32-bit ApiKey>
-5. *https://api.weatherbit.io/v2.0/forecast/daily?lat=44.92736&lon=7.71703&key=<32-bit ApiKey>
+4. *https://api.weatherbit.io/v2.0/forecast/daily?lat=34.66942&lon=32.70132&key=<32-bit ApiKey>*
+5. *https://api.weatherbit.io/v2.0/forecast/daily?lat=44.92736&lon=7.71703&key=<32-bit ApiKey>*
 
 Finally, you can test the REST service in your browser, example:
 
