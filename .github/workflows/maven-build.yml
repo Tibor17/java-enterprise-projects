@@ -18,4 +18,4 @@ jobs:
       - name: Maven Quarkus Build
         env:
           APIKEY: ${{ secrets.ApiKey }}
-        run: echo "TODO mvn -V -B -f weather-forecast-quarkus/pom.xml package"
+        run: mvn -V -B -f weather-forecast-quarkus/pom.xml -Dquarkus.profile=prod package
