@@ -87,6 +87,16 @@ public class WeatherForecastRestController {
             return locationResource;
         }).toList();
 
+        if (log.isDebugEnabled()) {
+            examinedLocations.forEach(loc ->
+                    loc.getForecast()
+                            .forEach(f ->
+                                    log.debug("temp: {}, wind_spd: {}, datetime: {}, {}",
+                                            f.getTemperature(), f.getWindSpeed(), f.getDatetime(),
+                                            loc.getCityName()))
+            );
+        }
+
         var resource = optimalWeatherCalculatorService.findBestWeatherForecastLocation(examinedLocations, date);
 
         log.info("Found optimal weather conditions for windsurfing: {}", resource.isPresent());
