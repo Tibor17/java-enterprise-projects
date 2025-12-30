@@ -2,8 +2,10 @@ package org.tibor17.wwws.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 public record GeoLocation(@JsonProperty BigDecimal latitude,
-                          @JsonProperty BigDecimal longitude) {
+                          @JsonProperty BigDecimal longitude)
+        implements Serializable {
 }

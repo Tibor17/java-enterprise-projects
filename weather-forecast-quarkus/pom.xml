@@ -78,6 +78,10 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
+		<dependency>
+			<groupId>io.quarkus</groupId>
+			<artifactId>quarkus-cache</artifactId>
+		</dependency>
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>

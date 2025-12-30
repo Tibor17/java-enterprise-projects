@@ -3,10 +3,7 @@ package org.tibor17.wwws.resource;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -20,16 +17,17 @@ import org.tibor17.wwws.client.ForecastService;
 import org.tibor17.wwws.model.restservice.OptimalWeatherDTO;
 import org.tibor17.wwws.service.ConfigService;
 import org.tibor17.wwws.service.OptimalWeatherCalculatorService;
+import org.tibor17.wwws.util.OptimalWeatherUtil;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static io.quarkus.rest.client.reactive.QuarkusRestClientBuilder.newBuilder;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static java.time.Duration.ofSeconds;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.tibor17.wwws.util.OptimalWeatherUtil.maskAuthKey;
 
 @ApplicationScoped
 @Path("/api/v0.1/forecast")
@@ -68,14 +66,16 @@ public class WeatherForecastRestResource {
         var authKey = configService.findAuthKey();
         log.info("""
                  Remote access URL {} for the REST client.
-                 Authorization key {}.""", remoteUrl, maskAuthKey(authKey));
+                 Authorization key {}.""",
+                remoteUrl.orElse("missing"),
+                authKey.map(OptimalWeatherUtil::maskAuthKey).orElse("missing"));
 
         var locations = configService.findAllLocations();
         log.info("Loaded {} locations from the database.", locations.size());
 
 
         var restClientService = newBuilder()
-                .baseUri(new URI(remoteUrl))
+                .baseUri(checkURL(remoteUrl))
                 .connectTimeout(10, SECONDS)
                 .readTimeout(10, SECONDS)
                 .build(ForecastService.class);
@@ -85,7 +85,7 @@ public class WeatherForecastRestResource {
                     location.latitude(),
                     location.longitude(),
                     7,
-                    authKey);
+                    checkAuthKey(authKey));
 
             var resource = locationResource.await()
                     .atMost(ofSeconds(30));
@@ -111,5 +111,16 @@ public class WeatherForecastRestResource {
         return bestResource.map(Response::ok)
                 .orElseGet(Response::noContent)
                 .build();
+    }
+
+    private static URI checkURL(Optional<String> remoteUrl) throws URISyntaxException {
+        if (remoteUrl.isEmpty()) {
+            throw new InternalServerErrorException("Missing database record for remote URL access.");
+        }
+        return new URI(remoteUrl.get());
+    }
+
+    private static String checkAuthKey(Optional<String> authKey) {
+        return authKey.orElseThrow(() -> new InternalServerErrorException("Missing database record for ApiKey."));
     }
 }

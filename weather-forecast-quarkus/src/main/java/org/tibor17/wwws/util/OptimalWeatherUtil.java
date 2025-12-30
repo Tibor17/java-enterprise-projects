@@ -33,6 +33,9 @@ public final class OptimalWeatherUtil {
     }
 
     public static String maskAuthKey(String authKey) {
+        if (authKey == null) {
+            return null;
+        }
         return authKey.length() <= 9 ?
                 authKey.replaceAll(".(?=.{0,9})", "*") :
                 authKey.replaceAll("(?<=.{3}).(?=.{3})", "*");
