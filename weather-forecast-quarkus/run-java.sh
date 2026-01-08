@@ -31,6 +31,7 @@ export JAVA_OPTS="$JAVA_OPTS -Dio.netty.eventLoopThreads=$(nproc --all)"
 export JAVA_OPTS="$JAVA_OPTS -Dquarkus.datasource.jdbc.url=jdbc:postgresql://localhost:5432/mydatabase"
 export JAVA_OPTS="$JAVA_OPTS -Dquarkus.datasource.username=admin"
 export JAVA_OPTS="$JAVA_OPTS -Dquarkus.datasource.password=password"
+export JAVA_OPTS="$JAVA_OPTS -Dquarkus.log.level=DEBUG"
 
 echo "JAVA_OPTS=$JAVA_OPTS"
 
