@@ -324,7 +324,7 @@ Escape character is '^]'.
 The data should be inserted and modified whenever the application is running.
 
 ```shell
-INSERT INTO settings (id, url, authkey) VALUES (nextval('id_seq'), 'http://api.weatherbit.io', '6d5d58529a3f48e8a4749804f6343fd1');
+INSERT INTO settings (id, url, authkey) VALUES (nextval('id_seq'), 'http://api.weatherbit.io', '<32-bit ApiKey>');
 INSERT INTO geo_location (id, latitude, longitude, country, city) VALUES (nextval('id_seq'), 54.69606, 18.67873, 'PL', 'Jastarnia');
 INSERT INTO geo_location (id, latitude, longitude, country, city) VALUES (nextval('id_seq'), 13.10732, -59.62021, 'Barbados', 'Bridgetown');
 INSERT INTO geo_location (id, latitude, longitude, country, city) VALUES (nextval('id_seq'), -3.71722, -38.54306, 'Brazil', 'Fortaleza');
@@ -335,18 +335,18 @@ COMMIT;
 
 In order to find out the Geo positions according to the names of countries and cities, you can use the following HTTP call
 in your browser. This is the example with country *Mauritius* and city *Le Morne*:
-*https://api.weatherbit.io/v2.0/forecast/daily?country=Le%20Morne&city=Mauritius&days=8&key=6d5d58529a3f48e8a4749804f6343fd1*
+*https://api.weatherbit.io/v2.0/forecast/daily?country=Le%20Morne&city=Mauritius&days=8&key=<32-bit ApiKey>*
 
 Similar example is here with Poland and city Jastarnia
-*https://api.weatherbit.io/v2.0/forecast/daily?country=PL&city=Jastarnia&days=8&key=6d5d58529a3f48e8a4749804f6343fd1*.
+*https://api.weatherbit.io/v2.0/forecast/daily?country=PL&city=Jastarnia&days=8&key=<32-bit ApiKey>*.
 
 Finally, the application will call the following list of URL addresses:
 
-1. *https://api.weatherbit.io/v2.0/forecast/daily?lat=54.69606&lon=18.67873&key=6d5d58529a3f48e8a4749804f6343fd1*
-2. *https://api.weatherbit.io/v2.0/forecast/daily?lat=13.10732&lon=-59.62021&key=6d5d58529a3f48e8a4749804f6343fd1*
-3. *https://api.weatherbit.io/v2.0/forecast/daily?lat=-3.71722&lon=-38.54306&key=6d5d58529a3f48e8a4749804f6343fd1*
-4. *https://api.weatherbit.io/v2.0/forecast/daily?lat=34.66942&lon=32.70132&key=6d5d58529a3f48e8a4749804f6343fd1*
-5. *https://api.weatherbit.io/v2.0/forecast/daily?lat=44.92736&lon=7.71703&key=6d5d58529a3f48e8a4749804f6343fd1*
+1. *https://api.weatherbit.io/v2.0/forecast/daily?lat=54.69606&lon=18.67873&key=<32-bit ApiKey>*
+2. *https://api.weatherbit.io/v2.0/forecast/daily?lat=13.10732&lon=-59.62021&key=<32-bit ApiKey>*
+3. *https://api.weatherbit.io/v2.0/forecast/daily?lat=-3.71722&lon=-38.54306&key=<32-bit ApiKey>*
+4. *https://api.weatherbit.io/v2.0/forecast/daily?lat=34.66942&lon=32.70132&key=<32-bit ApiKey>*
+5. *https://api.weatherbit.io/v2.0/forecast/daily?lat=44.92736&lon=7.71703&key=<32-bit ApiKey>*
 
 Finally, you can test the REST service in your browser, example:
 
