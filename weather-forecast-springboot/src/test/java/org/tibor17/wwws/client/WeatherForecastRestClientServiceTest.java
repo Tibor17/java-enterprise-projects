@@ -13,10 +13,10 @@ public class WeatherForecastRestClientServiceTest {
     @Test
     void shouldMatchPolishLocationWithGeoCoordinates() throws URISyntaxException {
         var service = new WeatherForecastRestClientService();
-        var factory = service.buildHttpServiceProxyFactory(new URI("http://api.weatherbit.io"));
-        var dto = service.readWeatherForecast(factory,
+        var restClientService = service.newRestClientService(new URI("http://api.weatherbit.io"));
+        var dto = service.readWeatherForecast(restClientService,
                 new BigDecimal("54.69606"), new BigDecimal("18.67873"),
-                System.getenv("APIKEY"));
+                "6d5d58529a3f48e8a4749804f6343fd1");
 
         assertThat(dto)
                 .isNotNull();

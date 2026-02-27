@@ -77,10 +77,10 @@ public class WeatherForecastRestController {
         var locations = configService.findAllLocations();
         log.info("Loaded {} locations from the database.", locations.size());
 
-        var factory = restClientService.buildHttpServiceProxyFactory(checkURL(remoteUrl));
+        var client = restClientService.newRestClientService(checkURL(remoteUrl));
 
         var examinedLocations = locations.stream().map(location -> {
-            var locationResource = restClientService.readWeatherForecast(factory,
+            var locationResource = restClientService.readWeatherForecast(client,
                     location.latitude(), location.longitude(), checkAuthKey(authKey));
 
             log.info("Found weather forecast location by date {}: {}", date, locationResource);

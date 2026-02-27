@@ -1,0 +1,166 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: 'weather-forecast-springboot'
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: ${pg.db.password}
+    url: ${pg.db.url}
+    username: ${pg.db.username}
+  jndi:
+    ignore: true
+  jpa:
+    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+#logging.level.root=INFO
+logging:
+  level:
+    org:
+      hibernate: INFO
+      springframework:
+        web: INFO
+    io.github.resilience4j: DEBUG
+#logging.level.webfilter=WARN
+#logging.level.app=WARN
+
+management:
+  endpoint:
+    health:
+      probes:
+        add-additional-paths: true
+      show-details: always
+      exposure:
+        include: health,metrics,circuitbreakers,ratelimiters,retries,bulkheads
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: '*'
+      path-mapping:
+        health: healthcheck
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+    probes:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  server:
+    port: 8080
+
+# Resilience4j Configuration
+resilience4j:
+  # Circuit Breaker Configuration
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        recordExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+    instances:
+      externalService:
+        baseConfig: default
+        slidingWindowSize: 20
+        waitDurationInOpenState: 30s
+      paymentService:
+        baseConfig: default
+        failureRateThreshold: 40
+        slowCallRateThreshold: 60
+        slowCallDurationThreshold: 2s
+
+  # Retry Configuration
+  retry:
+    configs:
+      default:
+        maxAttempts: 3
+        waitDuration: 1000
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 2
+        retryExceptions:
+          - org.springframework.web.client.HttpServerErrorException
+          - java.io.IOException
+    instances:
+      externalService:
+        baseConfig: default
+        maxAttempts: 4
+        waitDuration: 500
+      databaseService:
+        maxAttempts: 2
+        waitDuration: 100
+
+  # Rate Limiter Configuration
+  ratelimiter:
+    configs:
+      default:
+        registerHealthIndicator: true
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0
+        eventConsumerBufferSize: 100
+    instances:
+      apiEndpoint:
+        baseConfig: default
+        limitForPeriod: 50
+        limitRefreshPeriod: 1s
+      premiumApiEndpoint:
+        limitForPeriod: 100
+        limitRefreshPeriod: 1s
+
+  # Bulkhead Configuration
+  bulkhead:
+    configs:
+      default:
+        maxConcurrentCalls: 25
+        maxWaitDuration: 100ms
+    instances:
+      externalService:
+        baseConfig: default
+        maxConcurrentCalls: 10
+      databaseService:
+        maxConcurrentCalls: 50
+
+  # Thread Pool Bulkhead Configuration
+  thread-pool-bulkhead:
+    configs:
+      default:
+        maxThreadPoolSize: 4
+        coreThreadPoolSize: 2
+        queueCapacity: 100
+        keepAliveDuration: 20ms
+    instances:
+      heavyOperation:
+        baseConfig: default
+        maxThreadPoolSize: 8
+        coreThreadPoolSize: 4
+
+  # Time Limiter Configuration
+  timelimiter:
+    configs:
+      default:
+        cancelRunningFuture: true
+        timeoutDuration: 2s
+    instances:
+      externalService:
+        baseConfig: default
+        timeoutDuration: 3s
+      quickOperation:
+        timeoutDuration: 1s

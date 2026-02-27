@@ -13,7 +13,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 import static org.springframework.boot.SpringApplication.run;
 
 @SpringBootApplication(scanBasePackages = "org.tibor17.wwws")
-@PropertySource("classpath:/application.properties")
+@PropertySource({"classpath:/application.yml", "classpath:/application.properties"})
 @EntityScan(basePackages = "org.tibor17.wwws.domain")
 @EnableJpaRepositories(basePackages = "org.tibor17.wwws.repository")
 public class WorldwideWindsurfersWeatherServiceApplication {

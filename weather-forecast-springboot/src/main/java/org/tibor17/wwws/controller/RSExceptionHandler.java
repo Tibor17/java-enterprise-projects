@@ -1,6 +1,8 @@
 package org.tibor17.wwws.controller;
 
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,17 @@ import static org.springframework.http.HttpStatus.*;
 @RestControllerAdvice
 @Slf4j
 public class RSExceptionHandler {
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ResponseEntity<String> handleCallNotPermitted(CallNotPermittedException e) {
+        log.error("Circuit breaker is open: {}", e.getMessage());
+        return new ResponseEntity<>(SERVICE_UNAVAILABLE);
+    }
+
+    @ExceptionHandler(RequestNotPermitted.class)
+    public ResponseEntity<String> handleRequestNotPermitted(RequestNotPermitted e) {
+        log.error("Rate limit exceeded: {}", e.getMessage());
+        return new ResponseEntity<>(TOO_MANY_REQUESTS);
+    }
 
     @ExceptionHandler(UnrecognizedPropertyException.class)
     public ResponseEntity<String> handleUnrecognizedPropertyException(UnrecognizedPropertyException e) {
