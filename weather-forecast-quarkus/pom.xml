@@ -24,9 +24,9 @@
 		<!-- 3.13.2 jdk 17 -->
 		<!-- 3.5.3 -->
 		<!-- 3.24.5 -->
-		<quarkus.platform.version>3.30.6</quarkus.platform.version>
+		<quarkus.platform.version>3.32.1</quarkus.platform.version>
 <!--        <quarkus.platform.version>3.29.4</quarkus.platform.version>-->
-        <hibernate-orm.version>7.1.11.Final</hibernate-orm.version>
+        <hibernate-orm.version>7.2.4.Final</hibernate-orm.version>
         <jakarta-persistence.version>3.2.0</jakarta-persistence.version>
         <lombok.version>1.18.42</lombok.version>
 		<skipITs>true</skipITs>
