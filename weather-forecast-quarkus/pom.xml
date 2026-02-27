@@ -6,7 +6,7 @@
 
 	<groupId>org.tibor17</groupId>
 	<artifactId>weather-forecast-quarkus</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<description>Project 'Worldwide Windsurfer's Weather Service' with Quarkus</description>
 
