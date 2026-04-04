@@ -1,4 +1,4 @@
-package org.tibor17.wwws.util;
+package org.tibor17.wwws.cache;
 
 import org.ehcache.event.CacheEvent;
 import org.ehcache.event.CacheEventListener;

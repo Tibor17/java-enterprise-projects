@@ -11,7 +11,7 @@
         </expiry>
         <listeners>
             <listener>
-                <class>org.tibor17.wwws.util.EHCacheEventListener</class>
+                <class>org.tibor17.wwws.cache.EHCacheEventListener</class>
                 <event-firing-mode>SYNCHRONOUS</event-firing-mode>
                 <event-ordering-mode>UNORDERED</event-ordering-mode>
                 <events-to-fire-on>CREATED</events-to-fire-on>

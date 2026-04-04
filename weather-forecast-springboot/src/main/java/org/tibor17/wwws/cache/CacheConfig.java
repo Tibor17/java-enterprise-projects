@@ -1,4 +1,4 @@
-package org.tibor17.wwws.config;
+package org.tibor17.wwws.cache;
 
 import org.ehcache.config.CacheConfiguration;
 import org.ehcache.core.config.DefaultConfiguration;
@@ -16,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ReflectionUtils.MethodFilter;
-import org.tibor17.wwws.util.EHCacheEventListener;
 
 import java.io.File;
 import java.lang.reflect.ParameterizedType;

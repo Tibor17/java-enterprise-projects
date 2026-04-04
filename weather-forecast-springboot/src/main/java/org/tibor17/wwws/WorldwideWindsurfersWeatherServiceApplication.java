@@ -4,18 +4,21 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
+import org.tibor17.wwws.config.DatabaseConfigPropsValidationChecks;
 
 import static org.springframework.boot.SpringApplication.run;
 
 @SpringBootApplication(scanBasePackages = "org.tibor17.wwws")
-@PropertySource({"classpath:/application.yml", "classpath:/application.properties"})
+@PropertySource({"classpath:/application.yml", "classpath:/custom.properties", "classpath:/application-dev.properties", "classpath:/application-prod.properties"})
 @EntityScan(basePackages = "org.tibor17.wwws.domain")
 @EnableJpaRepositories(basePackages = "org.tibor17.wwws.repository")
+@EnableConfigurationProperties(DatabaseConfigPropsValidationChecks.class)
 public class WorldwideWindsurfersWeatherServiceApplication {
 
     public static void main(String[] args) {

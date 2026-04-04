@@ -23,5 +23,5 @@ export JAVA_HOME=/opt/jdk/ibm-jdk-21.0.3+9
 $JAVA_HOME/bin/java -Xmx256m \
  -jar ./target/weather-forecast-springboot.jar \
  --logging.level.root=INFO \
- --logging.level.webfilter=WARN \
- --logging.level.app=WARN
+ --logging.level.app=WARN \
+ --spring.profiles.active=dev

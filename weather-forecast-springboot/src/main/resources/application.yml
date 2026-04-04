@@ -6,6 +6,9 @@ server:
 spring:
   application:
     name: 'weather-forecast-springboot'
+  main:
+    banner-mode: off
+    web-application-type: servlet
   datasource:
     driver-class-name: org.postgresql.Driver
     password: ${pg.db.password}
@@ -18,16 +21,14 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
-#logging.level.root=INFO
 logging:
+  group.app: org.tibor17.wwws
   level:
     org:
       hibernate: INFO
       springframework:
         web: INFO
     io.github.resilience4j: DEBUG
-#logging.level.webfilter=WARN
-#logging.level.app=WARN
 
 management:
   endpoint:

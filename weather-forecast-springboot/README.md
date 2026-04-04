@@ -7,17 +7,6 @@ This README would normally document whatever steps are necessary to get your app
 * Quick summary
 * Version v0.1
 
-### Quick summary ###
-
-The application estimates the best weather conditions for making the windsurfing
-upon last 7 days of weather forecast (see *http://weatherbit.io*).
-Register at Weatherbit, login and pickup the API Key from the settings.
-The API Key appears in the form of the toke **7d5e9f0a410bc9bc3a21a6d01d5b0c51**.
-I changed the API Key with **<32-bit ApiKey>** and environment variable **APIKEY** in the following sources:
-
-1. *README.md*
-2. *postgres-init.sql*
-3. *WeatherForecastRestClientServiceTest.java*
 
 ### How do I set up remote access to Git in my private workspace of Bitbucket? ###
 
@@ -110,7 +99,7 @@ $ ./run-mvn-springboot.sh
 OR
 
 ```console
-$ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Dspring.profiles.active=dev -Dlogging.level.root=INFO -Dlogging.level.webfilter=WARN -Dlogging.level.app=WARN"
+$ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Dpg.db.url=jdbc:postgresql://localhost:5432/mydatabase -Dpg.db.username=admin -Dpg.db.password=password -Dspring.profiles.active=dev -Dlogging.level.root=INFO -Dlogging.level.app=WARN -Dlogging.level.webfilter=DEBUG"
 ```
 
 ### WhHowo do I run the native application on Linux/Bash? ###
