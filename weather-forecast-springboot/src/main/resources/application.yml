@@ -4,8 +4,6 @@ server:
     context-path: /
 
 spring:
-  application:
-    name: 'weather-forecast-springboot'
   main:
     banner-mode: off
     web-application-type: servlet
@@ -24,6 +22,7 @@ spring:
 logging:
   group.app: org.tibor17.wwws
   level:
+    tomcat: WARN
     org:
       hibernate: INFO
       springframework:
