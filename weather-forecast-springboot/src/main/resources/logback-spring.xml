@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration
+        xmlns="http://ch.qos.logback/xml/ns/logback"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd"
+        debug="true">
     <springProperty scope="context" name="APPLICATION_NAME" source="spring.application.name"/>
     <springProperty scope="context" name="APPLICATION_GROUP" source="spring.application.group"/>
     <property resource="custom.properties"/>
+
+    <property name="LOG_CORRELATION_PATTERN" value="${HOSTNAME}"/>
 
     <property name="DEV_LOG_EXCEPTION_CONVERSION_WORD" value="${dev.logging.exception-conversion-word}"/>
     <property name="NONDEV_LOG_EXCEPTION_CONVERSION_WORD" value="${non-dev.logging.exception-conversion-word}"/>
 
     <property name="LOG_DATEFORMAT_PATTERN" value="ISO8601"/>
 
-    <property name="COLORED_LOG_PATTERN_PREFIX" value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){yellow} %clr(%5p) %clr(${PID:-}){magenta} %clr(--- %esb(){APPLICATION_NAME}%esb{APPLICATION_GROUP}[%1.15t] ${LOG_CORRELATION_PATTERN:-}){faint}%clr(%-40.40logger{39}){cyan} %clr(:){faint} %m"/>
-    <property name="PLAIN_TEXT_LOG_PATTERN_PREFIX" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} %5p ${PID:-} --- %esb(){APPLICATION_NAME}%esb{APPLICATION_GROUP}[%1.15t] ${LOG_CORRELATION_PATTERN:-}%-40.40logger{39} : %m"/>
+    <property name="COLORED_LOG_PATTERN_PREFIX" value="%clr(%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}}){yellow} [%4.7relative] %highlight(%-5level) %clr(--- %esb{APPLICATION_GROUP}%esb{APPLICATION_NAME}%esb{PID}[${LOG_CORRELATION_PATTERN}] [%-1.15thread]){faint} in %clr(%-1.50logger{49}#%1.20method{19}\(%line\)){cyan}%clr(:){faint} %msg"/><!-- %maskedKvp{SINGLE} -->
+    <property name="PLAIN_TEXT_LOG_PATTERN_PREFIX" value="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd'T'HH:mm:ss.SSSXXX}} %-5level --- %esb{APPLICATION_GROUP}%esb{APPLICATION_NAME}%esb{PID}[${LOG_CORRELATION_PATTERN}] [%-1.15thread] in %-1.50logger{49}#%1.20method{19}\(%line\): %msg"/><!-- %maskedKvp{SINGLE} -->
 
     <!--    <property name="CONSOLE_LOG_PATTERN" value="%cyan(%d{dd-MM-yyyy HH:mm:ss.SSS}) %magenta([%thread]) %highlight(%-5level) %gray(%logger{36}.%M) - %msg%n"/>-->
     <property name="CONSOLE_LOG_CHARSET" value="UTF-8"/>
@@ -124,4 +130,6 @@
     <logger name="org.eclipse.jetty.util.component.AbstractLifeCycle" level="ERROR"/>
     <logger name="org.hibernate.validator.internal.util.Version" level="WARN"/>
     <logger name="org.springframework.boot.actuate.endpoint.jmx" level="WARN"/>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DefaultShutdownHook"/>
 </configuration>
